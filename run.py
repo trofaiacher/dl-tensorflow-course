@@ -1,8 +1,3 @@
-## Run in Google Colab
-
-Open the master notebook:
-https://colab.research.google.com/github/trofaiacher/dl-tensorflow-course/blob/main/colab/MASTER_NOTEBOOK.ipynb
-
 import os
 import json
 import yaml
