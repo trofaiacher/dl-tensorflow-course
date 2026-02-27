@@ -4,10 +4,18 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow as tf
+
+import matplotlib
+matplotlib.use("Agg")  # render plots to files (no GUI)
+
+import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-matplotlib.use("Agg")
+
+
+def savefig(name: str, dpi: int = 300) -> None:
+    plt.savefig(name, dpi=dpi, bbox_inches="tight")
+    print(f"Saved: {name}")
 
 
 # -----------------------------
@@ -22,10 +30,10 @@ COL_RED    = "#D55E00"
 # -----------------------------
 # Data: AND
 # -----------------------------
-X = np.array([[0,0],
-              [0,1],
-              [1,0],
-              [1,1]], dtype=np.float32)
+X = np.array([[0, 0],
+              [0, 1],
+              [1, 0],
+              [1, 1]], dtype=np.float32)
 
 y = np.array([[0],
               [0],
@@ -48,14 +56,18 @@ model.compile(
 
 
 # -----------------------------
+# Misclassifications per epoch
+# -----------------------------
+def miscls_count() -> int:
+    y_hat = (model.predict(X, verbose=0) >= 0.5).astype(int)
+    return int(np.sum(y_hat != y.astype(int)))
+
+
+# -----------------------------
 # Train
 # -----------------------------
 epochs = 200
 mis_history = []
-
-def miscls_count():
-    y_hat = (model.predict(X, verbose=0) >= 0.5).astype(int)
-    return int(np.sum(y_hat != y.astype(int)))
 
 for _ in range(epochs):
     model.fit(X, y, epochs=1, batch_size=4, verbose=0)
@@ -63,36 +75,37 @@ for _ in range(epochs):
 
 
 # -----------------------------
-# Plot misclassifications
+# Plot: misclassifications
 # -----------------------------
-plt.figure(figsize=(6,4))
+plt.figure(figsize=(6, 4))
 plt.plot(mis_history, linewidth=2, color=COL_BLUE)
 plt.xlabel("Epoch")
 plt.ylabel("Misclassifications")
 plt.title("AND: Misclassifications per Epoch")
 plt.grid(True, linestyle=":", linewidth=0.8)
-plt.show()
+savefig("and_misclassifications.png")
+plt.close()
 
 
 # -----------------------------
-# Plot decision boundary
+# Plot: decision boundary
 # -----------------------------
 xx, yy = np.meshgrid(np.linspace(-0.25, 1.25, 250),
                      np.linspace(-0.25, 1.25, 250))
 grid = np.c_[xx.ravel(), yy.ravel()].astype(np.float32)
 P = model.predict(grid, verbose=0).reshape(xx.shape)
 
-plt.figure(figsize=(6,6))
+plt.figure(figsize=(6, 6))
 
-mask0 = (y[:,0] == 0)
-mask1 = (y[:,0] == 1)
+mask0 = (y[:, 0] == 0)
+mask1 = (y[:, 0] == 1)
 
-plt.scatter(X[mask0,0], X[mask0,1],
+plt.scatter(X[mask0, 0], X[mask0, 1],
             s=110, marker="o", color=COL_BLUE,
             edgecolors=COL_BLACK, linewidths=0.8,
             label="AND = 0")
 
-plt.scatter(X[mask1,0], X[mask1,1],
+plt.scatter(X[mask1, 0], X[mask1, 1],
             s=110, marker="s", color=COL_ORANGE,
             edgecolors=COL_BLACK, linewidths=0.8,
             label="AND = 1")
@@ -116,4 +129,7 @@ plt.ylabel("$x_2$")
 plt.title("AND: Data Points + Decision Boundary")
 plt.grid(True, linestyle=":", linewidth=0.8)
 
-plt.show()
+savefig("and_decision_boundary.png")
+plt.close()
+
+print("Done.")
