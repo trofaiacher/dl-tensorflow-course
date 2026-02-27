@@ -1,5 +1,6 @@
 import os
 # Force CPU to avoid GPU/PTX issues in Colab
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import numpy as np
