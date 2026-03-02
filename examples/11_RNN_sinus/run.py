@@ -1,17 +1,28 @@
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
+import sys
+from pathlib import Path
 
+# Add project root to Python path (so "shared" can be imported)
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.append(str(ROOT))
 
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import layers, models
+from matplotlib.lines import Line2D
 
+from shared.seeds import set_seed
+from shared.plotting import savefig, COL_BLUE, COL_BLACK, COL_ORANGE, COL_RED
 
 
 # =============================
 # 0) Repro & Config
 # =============================
-SEED = 42
+SEED = set_seed(123)
 tf.keras.utils.set_random_seed(SEED)
 
 WINDOW = 40
@@ -122,7 +133,7 @@ plt.ylabel("MSE")
 plt.grid(True, linestyle=":", linewidth=0.8, color=COL_GREY)
 plt.legend()
 savefig("ts_compare_val_loss.png")
-plt.show()
+plt.close()
 
 # =============================
 # 6) Vorhersagen im Validierungsbereich
@@ -151,7 +162,7 @@ plt.ylabel("y")
 plt.grid(True, linestyle=":", linewidth=0.8, color=COL_GREY)
 plt.legend()
 savefig("ts_compare_val_pred_overlay.png")
-plt.show()
+plt.close()
 
 # =============================
 # 8) Plot: Zoom (letzte 200 Punkte)
@@ -167,4 +178,4 @@ plt.ylabel("y")
 plt.grid(True, linestyle=":", linewidth=0.8, color=COL_GREY)
 plt.legend()
 savefig("ts_compare_val_pred_zoom.png")
-plt.show()
+plt.close()
