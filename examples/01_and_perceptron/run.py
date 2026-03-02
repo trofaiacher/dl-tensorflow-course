@@ -1,3 +1,8 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from matplotlib.lines import Line2D
+
 import sys
 from pathlib import Path
 
@@ -7,25 +12,6 @@ sys.path.append(str(ROOT))
 
 from shared.seeds import set_seed
 from shared.plotting import savefig
-# -----------------------------
-import numpy as np
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from matplotlib.lines import Line2D
-# -----------------------------
-# Colour-blind safe palette (Okabe–Ito)
-# -----------------------------
-COL_BLACK  = "#000000"
-COL_ORANGE = "#E69F00"
-COL_SKY    = "#56B4E9"
-COL_GREEN  = "#009E73"
-COL_BLUE   = "#0072B2"
-COL_RED    = "#D55E00"
-COL_PURPLE = "#CC79A7"
-COL_GREY   = "#7F7F7F"
-
-def savefig(name, dpi=300):
-    plt.savefig(name, dpi=dpi, bbox_inches="tight")
 
 # -----------------------------
 # Daten: UND
