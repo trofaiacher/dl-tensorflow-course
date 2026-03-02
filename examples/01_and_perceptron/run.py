@@ -56,7 +56,7 @@ def miscls_count() -> int:
     return int(np.sum(y_hat != y.astype(int)))
 
 
-epochs = 200
+epochs = 50
 mis_history = []
 
 for _ in range(epochs):
